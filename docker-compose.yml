@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   mqtt:
-    image: vernemq/vernemq:1.10.1-alpine
+    build: vernemq/
     environment:
       DOCKER_VERNEMQ_ACCEPT_EULA: "yes"
       DOCKER_VERNEMQ_ALLOW_ANONYMOUS: "off"
