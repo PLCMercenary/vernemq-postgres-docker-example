@@ -100,10 +100,8 @@ function auth_on_register_common(db_library, reg)
              FROM vmq_auth_acl
              WHERE
                mountpoint=$1 AND
-               client_id=$2 AND
-               username=$3]],
+               username=$2]],
            reg.mountpoint,
-           reg.client_id,
            reg.username)
         if #results == 1 then
            row = results[1]
@@ -120,10 +118,10 @@ function auth_on_register_common(db_library, reg)
         -- use server side hash functions
         if method == "crypt" then
            -- only supported in postgresql
-           server_hash = "crypt($4, password)"
+           server_hash = "crypt($3, password)"
         elseif method == "sha256" then
            -- only supported in cockroachdb
-           server_hash = "sha256($4:::TEXT)"
+           server_hash = "sha256($3:::TEXT)"
         else
            return false
         end
@@ -133,11 +131,9 @@ function auth_on_register_common(db_library, reg)
              FROM vmq_auth_acl
              WHERE
                mountpoint=$1 AND
-               client_id=$2 AND
-               username=$3 AND
+               username=$2 AND
                password=]]..server_hash,
            reg.mountpoint,
-           reg.client_id,
            reg.username,
            reg.password)
         if #results == 1 then
